@@ -29,7 +29,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: pytest-report
-        path: artifacts/report.html
+        path: artifacts/01report.html
 
     - name: Upload Screenshots
       uses: actions/upload-artifact@v4
