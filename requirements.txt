@@ -1,4 +1,6 @@
-selenium
+selenium>=4.23.1
 pytest
-webdriver-manager
+pytest-xdist
 pytest-html
+pytest-rerunfailures
+allure-pytest

@@ -1,33 +1,20 @@
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from pages.base_page import BasePage
+from .base_page import BasePage
 
 class InventoryPage(BasePage):
-    INVENTORY_CONTAINER = (By.ID, "inventory_container")
-    ITEM_ADD_BUTTON = (By.XPATH, "//div[text()='{}']/ancestor::div[@class='inventory_item']//button")
-    CART_ICON = (By.CLASS_NAME, "shopping_cart_link")
-    MENU_BUTTON = (By.ID, "react-burger-menu-btn")
-    LOGOUT_LINK = (By.ID, "logout_sidebar_link")
+    INVENTORY_TITLE = (By.CLASS_NAME, "title")
+    CART_LINK = (By.CLASS_NAME, "shopping_cart_link")
 
     def is_loaded(self):
-        """Check if inventory page loaded successfully."""
-        return self.wait.until(
-            EC.visibility_of_element_located(self.INVENTORY_CONTAINER)
-        )
+        return self.wait_for(self.INVENTORY_TITLE).is_displayed()
 
     def add_to_cart(self, item_name):
-        locator = (self.ITEM_ADD_BUTTON[0], self.ITEM_ADD_BUTTON[1].format(item_name))
-        self.wait.until(EC.element_to_be_clickable(locator)).click()
+        button = self.driver.find_element(By.XPATH, f"//div[text()='{item_name}']/ancestor::div[@class='inventory_item']//button")
+        button.click()
 
     def open_cart(self):
-        self.wait.until(EC.element_to_be_clickable(self.CART_ICON)).click()
+        self.driver.find_element(*self.CART_LINK).click()
 
     def logout(self):
-        # Click menu
-        self.wait.until(EC.element_to_be_clickable(self.MENU_BUTTON)).click()
-        # Click logout
-        self.wait.until(EC.element_to_be_clickable(self.LOGOUT_LINK)).click()
-
-        # Wait until login button appears (more reliable than URL)
-        self.wait.until(EC.visibility_of_element_located((By.ID, "login-button")))
-        return True
+        self.driver.find_element(By.ID, "react-burger-menu-btn").click()
+        self.wait_for((By.ID, "logout_sidebar_link")).click()
